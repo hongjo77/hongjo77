@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<title>과제1</title>
+
+<style>
+		.container {
+			background-color: #ffc107;
+			margin: auto;
+			margin-top: 5rem;
+			padding: 2rem;
+			width: 75%;
+		}
+		
+		.container h2 {
+			margin-bottom: 2rem;
+			font-size: 35px;
+			font-weight: 400;
+		}
+
+		hr {
+			border: 0.5px solid rgba(0, 0, 0, 0.125);
+			margin: 20px 0px;
+		}
+		
+		.inputgrp {
+			display: flex;
+			margin-bottom: 1rem;
+		}
+		.formct {
+			flex-grow: 1;
+			padding: 0.5rem 1rem;
+			border: 1px solid #ced4da;
+			border-right: 0;
+			border-top-left-radius: 6px;
+			border-bottom-left-radius: 6px;
+			font-size:15px;
+			box-shadow: 0 0 20px 1px #4d90fe;
+        
+		}
+		
+		.btn1 {
+			padding: 0.5rem 1rem;
+			border-top-right-radius: 6px;
+			border-bottom-right-radius: 6px;
+			font-size:15px;
+			border-color: #007bff;
+			background-color: #007bff;
+			color: #fff;
+			border: none;
+		}
+		.btn1:hover {
+			background-color: #0069d9;
+			border-color: #0062cc;
+			color: #fff;
+		}
+		
+		ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+		
+		.listgrp {
+			background-color: #fff3cd;
+			border-color: #856404;
+			border-radius:4px;
+			color: #856404;
+		}
+		
+		.listitem{
+			display: block;
+			margin: 0px 3px;
+		    padding: 0.5rem 1rem;
+		    background-color: #fff3cd;
+		    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+		    color: black;
+		};
+		
+		li {
+			padding: 5px;
+			display: flex;
+			background-color: #fff3cd;
+		}
+		li:hover {
+			background-color: #e5d6a4;
+		}
+		
+		.btn2{
+			color: #856404;
+			font-size: 20px;
+			border:none;
+			
+			float: right;
+			background-color:transparent;
+		}
+		
+		
+	</style>
+
+<script>
+	function addItem(){
+		let todo=document.getElementById("item");
+		let list=document.getElementById("todolist");
+		let listitem=document.createElement("li");
+		
+		listitem.className="listitem";
+		listitem.innerText=todo.value;
+		list.appendChild(listitem);
+		
+		
+		let xbtn=document.createElement("button");
+		xbtn.className="btn2";
+		
+		xbtn.innerText = "X";
+		xbtn.onclick=function(e){
+			let pnode=e.target.parentNode;
+			list.removeChild(pnode);
+		}
+		listitem.appendChild(xbtn);
+		
+		todo.value="";
+		todo.focus();
+	}
+</script>
+</head>
+<body>
+<div class="container">
+		<h2>My ToDo App</h2>
+		<hr>
+		<div class="inputgrp">
+			<input id="item" class="formct" type="text" placeholder="할일을 입력하세요..">
+			<button type="button" class="btn1" onclick="addItem()">할일 추가</button>
+		</div>
+		<hr>
+		<ul id="todolist" class="listgrp"></ul>
+	</div>
+</body>
+
+</html>
