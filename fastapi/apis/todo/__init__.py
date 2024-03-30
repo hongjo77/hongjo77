@@ -1,9 +1,11 @@
 from fastapi import APIRouter, FastAPI, HTTPException
-from typing import List, Optional
 
-from model import Todo
 from schema import *
+from schema.todo import *
+
 from service.todo import TodoService
+from auth.auth_handler import signJWT
+from auth.auth_bearer import JWTBearer
 
 router = APIRouter(
     prefix="/todo",
@@ -13,29 +15,28 @@ router = APIRouter(
 
 todoService = TodoService()
 
-@router.get("/")
-async def root() -> GetAllTodoOutput:
-    todos = todoService.getAll()
-    if len(todos)==0:
-        raise HTTPException(status_code=404, detail="todos not found")
-    return {"todos": todos}
+@router.post("/parent")
+async def root(data: CreateTodoInput):
+    todo = todoService.createTodo(data)
 
-@router.get("/{todo_id}")
-async def root(todo_id: int) -> GetTodoOutput:
-    todo = todoService.getOne(todo_id)
+    return {"parent" : todo}
+
+@router.get("/todo/user/{input}")
+async def root(input: int):
+    p=GetUserTodosInput(id=input)
+    todo = todoService.getUserTodos(p)
+
+    if todo is None:
+        raise HTTPException(status_code=404, detail="todo not found")
     
-    return {"todo": todo} if todo else {"todo": None}
+    return todo
 
+@router.get("/todo/id/{input}")
+async def root(input: int):
+    p=GetTodoByIdInput(id=input)
+    todo = todoService.getTodoById(p)
 
-@router.post("/create")
-async def root(todo: str):
-    todoService.createOne(todo)
-    return {"message": "ok"}
-
-@router.put("/{todo_id}")
-async def root(todo_id: int, qq: str):
-    todoService.putOne(todo_id, qq)
-
-@router.delete("/{todo_id}")
-async def root(todo_id: int):
-    todoService.delOne(todo_id)
+    if todo is None:
+        raise HTTPException(status_code=404, detail="todo not found")
+    
+    return todo

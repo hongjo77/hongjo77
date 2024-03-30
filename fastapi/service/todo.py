@@ -1,77 +1,48 @@
 from fastapi import APIRouter, FastAPI
-from typing import List, Optional
 
-from model import TodoTable
+from model.parent import ParentTable
+from model.todo import TodoTable
+
 from schema import *
+from schema.todo import *
 from db import get_db_session
 
 
 class TodoService:
-    def __init__(self):
-        self.model=Todo
 
-    def getAll(self) -> List[TodoTable]:
+    def createTodo(self, p: CreateTodoInput) -> CreateTodoOutput:
         db=get_db_session()
         try:
-            todo = db.query(TodoTable).all()
+            todo = TodoTable(parent_id=p.parent_id, title=p.title,content=p.content)
+            db.add(todo)
+            db.commit()
+            db.refresh(todo)
+
             return todo
-        
         except Exception as e:
+            db.rollback()
             raise Exception(e)
-
-        return True
-
-    def getOne(self, todo_id: int) -> Optional[Todo]:
+        
+    def getUserTodos(self, p: GetUserTodosInput) -> GetUserTodosOutput:
         db=get_db_session()
         try:
-            todo = db.query(TodoTable).filter(TodoTable.id==todo_id).first()
+            todo = db.query(TodoTable).filter(ParentTable.id==p.id).all()
             if todo is None:
                 return None
 
             return todo
         except Exception as e:
-            raise HTTPException(status_code=500, detail="Internal server error")
-
-    def createOne(self,todo: str):
-        db=get_db_session()
-        try:
-            todo = TodoTable(todo=todo)
-            db.add(todo)
-            db.commit()
-            db.refresh(todo)
-
-            return True
-        except Exception as e:
-            db.rollback()
+            #raise HTTPException(status_code=500, detail="Internal server error")
             raise Exception(e)
-
-    def putOne(self, todo_id: int, todostr: str) -> bool:
+        
+    def getTodoById(self, p: GetTodoByIdInput) -> GetTodoByIdOutput:
         db=get_db_session()
         try:
-            todo = db.query(TodoTable).filter(TodoTable.id==todo_id).first()
+            todo = db.query(TodoTable).filter(TodoTable.id==p.id).first()
             if todo is None:
-                return False
-            
-            setattr(todo, "todo", todostr)
-    
-            db.commit()
+                return None
 
-            return True
+            return todo
         except Exception as e:
-            db.rollback()
+            #raise HTTPException(status_code=500, detail="Internal server error")
             raise Exception(e)
-
-    def delOne(self, todo_id: int)-> bool:
-        db=get_db_session()
-        try:
-            todo = db.query(TodoTable).filter(TodoTable.id==todo_id).first()
-            if todo is None:
-                return False
-            db.delete(todo)
-            db.commit()
-
-            return True
-        except Exception as e:
-            db.rollback()
-            raise Exception(e)
-            

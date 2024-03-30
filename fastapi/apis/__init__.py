@@ -1,7 +1,5 @@
 from fastapi import APIRouter, FastAPI
-from typing import List, Optional
 
-from model import Todo
 from schema import *
 
 router = APIRouter(

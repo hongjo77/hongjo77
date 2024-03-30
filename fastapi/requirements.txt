@@ -1,0 +1,15 @@
+fastapi == 0.110.0
+uvicorn == 0.28.0
+pydantic == 2.6.4
+sqlalchemy == 2.0.28
+python-dotenv == 1.0.1
+numpy == 1.26.4
+tensorflow == 2.16.1
+librosa == 0.10.1
+pandas == 2.2.1
+scikit-image == 0.22.0
+python-decouple == 3.8
+pymysql == 1.1.0
+python-multipart == 0.0.9
+email-validator == 2.1.1
+pyjwt == 2.8.0
